@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme:Apptheme.darkThemeMode,
+      debugShowCheckedModeBanner: false,
       home: const SignupPage(),
     );
   }
