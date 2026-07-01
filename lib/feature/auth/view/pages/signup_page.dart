@@ -40,7 +40,7 @@ class _SignupPageState extends State<SignupPage> {
               obscureText: true,),
               const SizedBox(height: 20,),
               AuthGradientButton(),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 25,),
               RichText(text:  
               TextSpan(
                 text: "Already have an account? ",
