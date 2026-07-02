@@ -20,6 +20,7 @@ class CustomField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: "$hintText",
       ),
+      validator:(value) => value!.isEmpty ? "Please enter $hintText" : null,
       obscureText: obscureText,
     );
   }
