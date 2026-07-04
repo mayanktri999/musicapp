@@ -1,10 +1,13 @@
+
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from sqlalchemy import create_engine
-
+from sqlalchemy.orm import sessionmaker
 app = FastAPI()
-DATABASE_URL = "postgresql://postgres:password@localhost/dbname"
+DATABASE_URL = "postgresql://postgres:mayank2006@localhost:5432/musicapp"
 engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+db = SessionLocal()
 
 class UserCreate(BaseModel):
     username: str
