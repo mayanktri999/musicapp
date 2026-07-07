@@ -1,55 +1,17 @@
 
-from tokenize import String
-from unittest.mock import Base
-import uuid
-import bcrypt
-from sqlalchemy.dialects.postgresql import UUID
-from fastapi import FastAPI, HTTPException
+
+from models.base import Base
+from database import engine
 from fastapi import FastAPI, Request
-from pydantic import BaseModel
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine,Column, Integer, String, LargeBinary
+from routes import auth
+
 
 app = FastAPI()
-DATABASE_URL = "postgresql://postgres:mayank2006@localhost:5432/musicapp"
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-db = SessionLocal()
 
-class UserCreate(BaseModel):
-    username: str
-    email: str
-    password: str
-Base = declarative_base()
 
-class User(Base):
-        __tablename__ = "users"
-        id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-        username = Column(String(100))
-        email = Column(String(100))
-        password = Column(LargeBinary)       
-    
+app.include_router(auth.router, prefix="/auth", tags=["auth"])
 
-@app.post("/signup")
-def signup_user(user: UserCreate):
-    
-    
-    #check if the user already exists in the database
-    user_db = db.query(User).filter((User.email == user.email)).first()
-
-    if  user_db:
-         raise HTTPException(status_code=400, detail="User with this email already exists")
-         
-   
-    #add the user to the database
-    hash_password = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt())
-    user_db = User(id=str(uuid.uuid4()), username=user.username, email=user.email, password=hash_password)
-    db.add(user_db)
-    db.commit()
-    db.refresh(user_db)
-
-    return user_db
 
 Base.metadata.create_all(engine)
+    
+ 
