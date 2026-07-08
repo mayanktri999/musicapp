@@ -9,7 +9,7 @@ class CustomField extends StatelessWidget {
     super.key,
     required this.hintText,
     required this.controller,
-    this.obscureText = false,
+    this.obscureText = true,
   });
 
 
