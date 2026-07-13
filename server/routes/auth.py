@@ -5,7 +5,7 @@ from models.user import User
 import bcrypt
 from pydantic_schemas.user_create import UserCreate
 from fastapi import APIRouter
-from database import db, get_db
+from database import  get_db
 from sqlalchemy.orm import Session
 
 router = APIRouter()
