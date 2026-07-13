@@ -7,13 +7,15 @@ from pydantic_schemas.user_create import UserCreate
 from fastapi import APIRouter
 from database import  get_db
 from sqlalchemy.orm import Session
+from pydantic_schemas.user_login import UserLogin
+
 
 router = APIRouter()
 
 
 app = FastAPI()
 
-@router.post("/signup", response_model=UserCreate)
+@router.post("/signup",status_code=201, response_model=UserCreate)
 def signup_user(user: UserCreate,db: Session = Depends(get_db)):
     
     
@@ -33,3 +35,16 @@ def signup_user(user: UserCreate,db: Session = Depends(get_db)):
 
     return user_db
 
+@router.post("/login")
+def login_user(user: UserLogin, db: Session = Depends(get_db)):
+    #check if the user is alredy exists in the database
+    user_db = db.query(User).filter((User.email == user.email)).first()
+
+    if not user_db:
+         raise HTTPException(status_code=400, detail="User with this email does not exist")
+
+    #check if the password is correct
+    if not bcrypt.checkpw(user.password.encode(), user_db.password):
+        raise HTTPException(status_code=400, detail="Incorrect password")
+
+    return user_db
